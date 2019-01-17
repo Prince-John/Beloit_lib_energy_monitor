@@ -29,7 +29,7 @@ uint32_t syncTime = 0; // time of last sync()
 
 
 #define tempPin 0
-
+const int ctSensitivity=2; //change this to calibarate the ct sensor. any value from 1 to 10, higher value lowers the sensitivity. 
 const int sensor1 = A0;
 const int sensor2 = A1;
 const int sensor3 = A2;
@@ -57,13 +57,30 @@ void error(char *str)
 
 
 
-int monitorState(int x){
+int monitorState(int x){// x is the monitor no. This method returns 1 or 0 to determine if the monitor is on or off.
+int sensorValue =512;
+  switch(x){
+    case 1: sensorValue = analogRead(sensor1);
+            break;
+    case 2: sensorValue = analogRead(sensor2);
+            break;
+    case 3: sensorValue = analogRead(sensor3);
+            break;
+    case 4: sensorValue = analogRead(sensor4);
+            break;
+    default:sensorValue = 512;
+  }   
+  
 
+  if(sensorValue>512-ctSensitivity||sensorValue<512+ctSensitivity)//this bounds the sensor reading around +/- of the ctSensitivity, the sensor should read at 512,+/-2  when there is no current in the ct. 
+    return 0;
+  else
+    return 1;  
+ }
+   
   
   
   
-  
-  }
 
 
 
